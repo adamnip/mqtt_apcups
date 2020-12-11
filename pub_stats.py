@@ -3,8 +3,13 @@ import json
 import paho.mqtt.publish as publish
 import argparse
 
+'''mqtt details'''
 hostname = ""
+auth={'username': "", 'password': ""}
+
+'''device details loaded in to home assistant'''
 device = {"device": {"identifiers": ["ups_auto_mqtt"],"name": "UPS Auto MQTT", "model": "pi2b", "manufacturer": "raspberry"}}
+
 float_keys_list = ["UPS_ALARMDEL", "UPS_BATTV",	"UPS_BCHARGE", "UPS_CUMONBATT", "UPS_HITRANS", "UPS_LINEV", "UPS_LOADPCT", "UPS_LOTRANS", "UPS_MAXTIME", "UPS_MBATTCHG", "UPS_MINTIMEL", "UPS_NOMBATTV", "UPS_NOMINV", "UPS_NOMPOWER", "UPS_TIMELEFT", "UPS_TONBATT",]
 
 def get_stats():
