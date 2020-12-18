@@ -4,11 +4,11 @@ import paho.mqtt.publish as publish
 from time import sleep
 
 '''mqtt details'''
-hostname = ""
+hostname = "mqtt.home.com"
 auth={'username': "", 'password': ""}
 
 '''device details loaded in to home assistant'''
-device = {"device": {"identifiers": ["ups_auto_mqtt"],"name": "UPS Auto MQTT", "model": "pi2b", "manufacturer": "raspberry"}}
+device = {"device": {"identifiers": ["comspi_ups_auto_mqtt"],"name": "Comspi UPS Auto MQTT", "model": "pi2b", "manufacturer": "raspberry"}}
 
 bace_topic = "apc_ups/sensor/{}/state"
 
@@ -47,7 +47,6 @@ def setup():
             config = {"name": i, "unique_id" : i, "state_topic": bace_topic.format(i), "unit_of_measurement": "Minutes"}
         elif "Seconds" in dict[i]:
             config = {"name": i, "unique_id" : i, "state_topic": bace_topic.format(i), "unit_of_measurement": "Seconds"}
-            #print (config)
         else:
             config = {"name": i, "unique_id" : i, "state_topic": bace_topic.format(i)}
         autoconfig.append(config)
@@ -75,7 +74,11 @@ def autoconfig(config):
         setup = ("homeassistant/sensor/"+i['unique_id']+'/config')
         (i).update(device)
         message = json.dumps(i)
-        publish.single (setup, message, hostname=hostname, keepalive=5,retain=True)
+        '''Is username empty'''
+        if auth['username'] != "":
+            publish.single (setup, message, hostname=hostname, auth=auth, keepalive=5, retain=True)
+        else:
+            publish.single (setup, message, hostname=hostname, keepalive=5, retain=True)
 
 data = get_stats()
 dict = convert(data)
